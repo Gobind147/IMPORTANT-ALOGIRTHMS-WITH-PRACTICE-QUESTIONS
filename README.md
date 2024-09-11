@@ -544,3 +544,23 @@ public class FibonacciSearch {
 }
 ```
 
+| Problem Number | Title                                                   |
+|----------------|---------------------------------------------------------|
+| 1346           | Check if N and its Double Exist                          |
+| 202            | Happy Number                                             |
+| 4              | Median of Two Sorted Arrays                              |
+| 704            | Binary Search                                            |
+| 33             | Search in Rotated Sorted Array                           |
+| 154            | Find Minimum in Rotated Sorted Array II                  |
+| 410            | Split Array Largest Sum                                  |
+| 1231           | Divide Chocolate                                         |
+| 350            | Intersection of Two Arrays II                            |
+| 287            | Find the Duplicate Number                                |
+| 352            | Data Stream as Disjoint Intervals                        |
+| 367            | Valid Perfect Square                                     |
+| 1060           | Missing Element in Sorted Array                          |
+| 702            | Search in a Sorted Array of Unknown Size                 |
+| 278            | First Bad Version                                        |
+| 658            | Find K Closest Elements                                  |
+| 668            | Kth Smallest Number in Multiplication Table              |
+
