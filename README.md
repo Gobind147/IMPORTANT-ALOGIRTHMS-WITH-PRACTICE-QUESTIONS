@@ -564,3 +564,228 @@ public class FibonacciSearch {
 | 658            | Find K Closest Elements                                  |
 | 668            | Kth Smallest Number in Multiplication Table              |
 
+
+
+**TREE ALGORITHMS**
+
+1. Preorder Traversal (DFS)
+Description: Preorder traversal visits the root node first, then recursively visits the left subtree, and finally the right subtree.
+
+Time Complexity: O(n), where n is the number of nodes.
+Space Complexity: O(h), where h is the height of the tree (O(n) in the worst case).
+```
+public void preorderTraversal(TreeNode node) {
+    if (node == null) return;
+    // Visit the root
+    preorderTraversal(node.left);
+    preorderTraversal(node.right);
+}
+```
+2. Inorder Traversal (DFS)
+Description: Inorder traversal recursively visits the left subtree, then visits the root node, and finally visits the right subtree.
+
+Time Complexity: O(n), where n is the number of nodes.
+Space Complexity: O(h), where h is the height of the tree (O(n) in the worst case).
+```
+public void inorderTraversal(TreeNode node) {
+    if (node == null) return;
+    inorderTraversal(node.left);
+    // Visit the root
+    inorderTraversal(node.right);
+}
+```
+
+
+3. Postorder Traversal (DFS)
+Description: Postorder traversal recursively visits the left subtree, then the right subtree, and finally visits the root node.
+
+Time Complexity: O(n), where n is the number of nodes.
+Space Complexity: O(h), where h is the height of the tree (O(n) in the worst case).
+```
+public void postorderTraversal(TreeNode node) {
+    if (node == null) return;
+    postorderTraversal(node.left);
+    postorderTraversal(node.right);
+    // Visit the root
+}
+```
+4. Level Order Traversal (BFS)
+Description: Level-order traversal visits nodes level by level from left to right, using a queue.
+
+Time Complexity: O(n), where n is the number of nodes.
+Space Complexity: O(n) (queue size can be up to the number of nodes).
+```
+public void levelOrderTraversal(TreeNode node) {
+    if (node == null) return;
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.add(node);
+
+    while (!queue.isEmpty()) {
+        TreeNode current = queue.poll();
+        if (current.left != null) queue.add(current.left);
+        if (current.right != null) queue.add(current.right);
+    }
+}
+```
+5. Binary Search Tree (BST) - Insertion
+Description: Insertion in a BST follows the rule that left children are smaller than the parent and right children are larger.
+
+Time Complexity: O(h), where h is the height of the tree.
+Space Complexity: O(h), for the recursive stack.
+```
+public TreeNode insertIntoBST(TreeNode root, int key) {
+    if (root == null) return new TreeNode(key);
+    if (key < root.val) root.left = insertIntoBST(root.left, key);
+    else root.right = insertIntoBST(root.right, key);
+    return root;
+}
+```
+6. Binary Search Tree (BST) - Deletion
+Description: Deletion in a BST involves three cases: removing a node with no children, one child, or two children. In the case of two children, the inorder successor (smallest in the right subtree) replaces the deleted node.
+
+Time Complexity: O(h), where h is the height of the tree.
+Space Complexity: O(h), for the recursive stack.
+```
+public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) return null;
+    if (key < root.val) root.left = deleteNode(root.left, key);
+    else if (key > root.val) root.right = deleteNode(root.right, key);
+    else {
+        if (root.left == null) return root.right;
+        if (root.right == null) return root.left;
+        TreeNode successor = findMin(root.right);
+        root.val = successor.val;
+        root.right = deleteNode(root.right, successor.val);
+    }
+    return root;
+}
+
+private TreeNode findMin(TreeNode node) {
+    while (node.left != null) node = node.left;
+    return node;
+}
+```
+7. Binary Search Tree (BST) - Search
+Description: Searching in a BST follows the rule of checking the left subtree if the target is smaller and the right subtree if the target is larger.
+
+Time Complexity: O(h), where h is the height of the tree.
+Space Complexity: O(h), for the recursive stack.
+```
+public TreeNode searchBST(TreeNode root, int val) {
+    if (root == null || root.val == val) return root;
+    return val < root.val ? searchBST(root.left, val) : searchBST(root.right, val);
+}
+```
+8. Lowest Common Ancestor (LCA)
+Description: The lowest common ancestor of two nodes is the deepest node that is an ancestor of both. In a BST, this can be done by recursively traversing the tree.
+
+Time Complexity: O(h), where h is the height of the tree.
+Space Complexity: O(h), for the recursive stack.
+```
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (root == null) return null;
+    if (p.val < root.val && q.val < root.val) return lowestCommonAncestor(root.left, p, q);
+    if (p.val > root.val && q.val > root.val) return lowestCommonAncestor(root.right, p, q);
+    return root;
+}
+```
+9. AVL Tree (Balanced Tree) - Insertion
+Description: AVL trees are self-balancing binary search trees. After insertion, you update the balance factor and rotate if necessary.
+
+Time Complexity: O(log n)
+Space Complexity: O(log n)
+```
+public TreeNode insertAVL(TreeNode node, int key) {
+    if (node == null) return new TreeNode(key);
+    if (key < node.val) node.left = insertAVL(node.left, key);
+    else if (key > node.val) node.right = insertAVL(node.right, key);
+
+    node.height = 1 + Math.max(height(node.left), height(node.right));
+    int balance = getBalance(node);
+
+    if (balance > 1 && key < node.left.val) return rotateRight(node);
+    if (balance < -1 && key > node.right.val) return rotateLeft(node);
+    if (balance > 1 && key > node.left.val) {
+        node.left = rotateLeft(node.left);
+        return rotateRight(node);
+    }
+    if (balance < -1 && key < node.right.val) {
+        node.right = rotateRight(node.right);
+        return rotateLeft(node);
+    }
+
+    return node;
+}
+```
+10. Segment Tree (Range Queries)
+Description: Segment trees allow for efficient range queries and updates in an array.
+
+Time Complexity: O(log n) for range queries and updates.
+Space Complexity: O(n)
+```
+public void buildSegmentTree(int[] arr, int[] segTree, int low, int high, int pos) {
+    if (low == high) {
+        segTree[pos] = arr[low];
+        return;
+    }
+    int mid = (low + high) / 2;
+    buildSegmentTree(arr, segTree, low, mid, 2 * pos + 1);
+    buildSegmentTree(arr, segTree, mid + 1, high, 2 * pos + 2);
+    segTree[pos] = segTree[2 * pos + 1] + segTree[2 * pos + 2];
+}
+```
+11. Fenwick Tree (Binary Indexed Tree, BIT)
+Description: Fenwick Tree is used for efficiently computing prefix sums and updates.
+
+Time Complexity: O(log n) for both updates and queries.
+Space Complexity: O(n)
+```
+public void updateBIT(int[] BITree, int n, int index, int val) {
+    index = index + 1;
+    while (index <= n) {
+        BITree[index] += val;
+        index += index & (-index);
+    }
+}
+
+public int getSumBIT(int[] BITree, int index) {
+    int sum = 0;
+    index = index + 1;
+    while (index > 0) {
+        sum += BITree[index];
+        index -= index & (-index);
+    }
+    return sum;
+}
+```
+
+| Algorithm                    | Time Complexity | Space Complexity |
+|------------------------------|-----------------|------------------|
+| Preorder Traversal            | O(n)            | O(h)             |
+| Inorder Traversal             | O(n)            | O(h)             |
+| Postorder Traversal           | O(n)            | O(h)             |
+| Level Order Traversal         | O(n)            | O(n)             |
+| BST - Insertion               | O(h)            | O(h)             |
+| BST - Deletion                | O(h)            | O(h)             |
+| BST - Search                  | O(h)            | O(h)             |
+| Lowest Common Ancestor (LCA)  | O(h)            | O(h)             |
+| AVL Tree - Insertion          | O(log n)        | O(log n)         |
+| Segment Tree (Range Queries)  | O(log n)        | O(n)             |
+| Fenwick Tree (BIT)            | O(log n)        | O(n)             |
+
+
+| Problem Number | Title                                                       |
+|----------------|-------------------------------------------------------------|
+| 94             | Binary Tree Inorder Traversal                               |
+| 144            | Binary Tree Preorder Traversal                              |
+| 145            | Binary Tree Postorder Traversal                             |
+| 102            | Binary Tree Level Order Traversal                           |
+| 700            | Search in a Binary Search Tree                              |
+| 701            | Insert into a Binary Search Tree                            |
+| 450            | Delete Node in a BST                                        |
+| 235            | Lowest Common Ancestor of a Binary Search Tree              |
+| 236            | Lowest Common Ancestor of a Binary Tree                     |
+| 199            | Binary Tree Right Side View                                 |
+| 222            | Count Complete Tree Nodes                                   |
+| 337            | House Robber III                                            |
+| 543            | Diameter of
