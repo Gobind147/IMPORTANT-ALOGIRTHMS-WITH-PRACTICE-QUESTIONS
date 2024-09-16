@@ -794,3 +794,303 @@ public int getSumBIT(int[] BITree, int index) {
 | 222            | Count Complete Tree Nodes                                   |
 | 337            | House Robber III                                            |
 | 543            | Diameter of
+
+
+**Graph**
+
+1. Breadth-First Search (BFS)
+   Description: BFS is an algorithm for traversing or searching tree or graph data structures. It starts at a given node and explores all its neighbors at the present
+   depth before moving on to nodes at the next depth level.
+   Time Complexity: O(V + E), where V is the number of vertices and E is the number of edges.
+   Space Complexity: O(V), for the queue and visited list.
+```
+import java.util.*;
+
+public void BFS(int start, List<List<Integer>> graph, boolean[] visited) {
+    Queue<Integer> queue = new LinkedList<>();
+    queue.add(start);
+    visited[start] = true;
+    
+    while (!queue.isEmpty()) {
+        int node = queue.poll();
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                queue.add(neighbor);
+                visited[neighbor] = true;
+            }
+        }
+    }
+}
+```
+2. Depth-First Search (DFS)
+Description: DFS is an algorithm for traversing or searching tree or graph structures. The algorithm starts at the root node and explores as far as possible along each branch before backtracking.
+Time Complexity: O(V + E)
+Space Complexity: O(V), for the recursion stack and visited list.
+```
+public void DFS(int node, List<List<Integer>> graph, boolean[] visited) {
+    visited[node] = true;
+    for (int neighbor : graph.get(node)) {
+        if (!visited[neighbor]) {
+            DFS(neighbor, graph, visited);
+        }
+    }
+}
+```
+4. Dijkstra’s Algorithm (Single Source Shortest Path)
+Description: Dijkstra’s algorithm finds the shortest path from a source node to all other nodes in a graph with non-negative edge weights.
+Time Complexity: O((V + E) log V), with a priority queue.
+Space Complexity: O(V), for the distance array and priority queue.
+```
+import java.util.*;
+
+public int[] dijkstra(int V, List<List<int[]>> graph, int src) {
+    int[] dist = new int[V];
+    Arrays.fill(dist, Integer.MAX_VALUE);
+    dist[src] = 0;
+
+    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+    pq.add(new int[] {src, 0});
+
+    while (!pq.isEmpty()) {
+        int[] current = pq.poll();
+        int node = current[0];
+        int currDist = current[1];
+
+        if (currDist > dist[node]) continue;
+
+        for (int[] neighbor : graph.get(node)) {
+            int nextNode = neighbor[0];
+            int edgeWeight = neighbor[1];
+            if (dist[node] + edgeWeight < dist[nextNode]) {
+                dist[nextNode] = dist[node] + edgeWeight;
+                pq.add(new int[] {nextNode, dist[nextNode]});
+            }
+        }
+    }
+
+    return dist;
+}
+```
+4. Bellman-Ford Algorithm (Single Source Shortest Path with Negative Weights)
+Description: The Bellman-Ford algorithm computes the shortest paths from a single source vertex to all other vertices in a weighted graph. It handles negative weight edges.
+Time Complexity: O(V * E)
+Space Complexity: O(V), for the distance array.
+```
+public int[] bellmanFord(int V, List<int[]> edges, int src) {
+    int[] dist = new int[V];
+    Arrays.fill(dist, Integer.MAX_VALUE);
+    dist[src] = 0;
+
+    for (int i = 1; i < V; i++) {
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int weight = edge[2];
+            if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+            }
+        }
+    }
+
+    // Check for negative-weight cycles
+    for (int[] edge : edges) {
+        int u = edge[0];
+        int v = edge[1];
+        int weight = edge[2];
+        if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
+            System.out.println("Graph contains negative-weight cycle");
+            return null;
+        }
+    }
+
+    return dist;
+}
+```
+5. Floyd-Warshall Algorithm (All-Pairs Shortest Path)
+Description: Floyd-Warshall algorithm is used for finding the shortest paths between all pairs of vertices in a weighted graph.
+Time Complexity: O(V³)
+Space Complexity: O(V²), for the distance matrix.
+```
+public int[][] floydWarshall(int V, int[][] graph) {
+    int[][] dist = new int[V][V];
+
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            dist[i][j] = graph[i][j];
+        }
+    }
+
+    for (int k = 0; k < V; k++) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE) {
+                    dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);
+                }
+            }
+        }
+    }
+
+    return dist;
+}
+```
+7. Kruskal’s Algorithm (Minimum Spanning Tree)
+Description: Kruskal’s algorithm finds the minimum spanning tree by sorting all edges and adding them to the tree if they don’t form a cycle.
+Time Complexity: O(E log E), because of sorting edges.
+Space Complexity: O(V), for storing the parent and rank arrays for the union-find.
+```
+public int kruskal(int V, List<int[]> edges) {
+    Collections.sort(edges, (a, b) -> a[2] - b[2]);
+    UnionFind uf = new UnionFind(V);
+    int mstWeight = 0;
+
+    for (int[] edge : edges) {
+        int u = edge[0];
+        int v = edge[1];
+        int weight = edge[2];
+        if (uf.find(u) != uf.find(v)) {
+            uf.union(u, v);
+            mstWeight += weight;
+        }
+    }
+
+    return mstWeight;
+}
+```
+7. Prim’s Algorithm (Minimum Spanning Tree)
+Description: Prim’s algorithm constructs a minimum spanning tree by starting with an arbitrary vertex and growing the tree one edge at a time.
+Time Complexity: O((V + E) log V), using a priority queue.
+Space Complexity: O(V), for the priority queue and visited array.
+```
+public int prims(int V, List<List<int[]>> graph) {
+    boolean[] visited = new boolean[V];
+    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+    pq.add(new int[]{0, 0});  // start from node 0 with 0 cost
+    int mstWeight = 0;
+
+    while (!pq.isEmpty()) {
+        int[] current = pq.poll();
+        int node = current[0];
+        int weight = current[1];
+
+        if (visited[node]) continue;
+        visited[node] = true;
+        mstWeight += weight;
+
+        for (int[] neighbor : graph.get(node)) {
+            if (!visited[neighbor[0]]) {
+                pq.add(neighbor);
+            }
+        }
+    }
+
+    return mstWeight;
+}
+```
+8. Topological Sort
+Description: Topological Sort is used for ordering the vertices of a directed acyclic graph (DAG). It orders the vertices such that for every directed edge (u, v), vertex u comes before vertex v.
+Time Complexity: O(V + E)
+Space Complexity: O(V), for the recursion stack and visited array.
+```
+public void topologicalSort(int node, List<List<Integer>> graph, boolean[] visited, Stack<Integer> stack) {
+    visited[node] = true;
+    for (int neighbor : graph.get(node)) {
+        if (!visited[neighbor]) {
+            topologicalSort(neighbor, graph, visited, stack);
+        }
+    }
+    stack.push(node);
+}
+```
+10. Tarjan’s Algorithm (Strongly Connected Components)
+Description: Tarjan’s Algorithm finds all strongly connected components in a directed graph.
+Time Complexity: O(V + E)
+Space Complexity: O(V), for the stack, low-link, and discovery arrays.
+```
+public void tarjanSCC(int u, int[] disc, int[] low, Stack<Integer> stack, boolean[] stackMember, List<List<Integer>> graph) {
+    static int time = 0;
+    disc[u] = low[u] = ++time;
+    stack.push(u);
+    stackMember[u] = true;
+
+    for (int v : graph.get(u)) {
+        if (disc[v] == -1) {
+            tarjanSCC(v, disc, low, stack, stackMember, graph);
+            low[u] = Math.min(low[u], low[v]);
+        } else if (stackMember[v]) {
+            low[u] = Math.min(low[u], disc[v]);
+        }
+    }
+
+    if (low[u] == disc[u]) {
+        while (stack.peek() != u) {
+            int w = stack.pop();
+            stackMember[w] = false;
+        }
+        stack.pop();
+        stackMember[u] = false;
+    }
+}
+```
+10. Kosaraju’s Algorithm (Strongly Connected Components)
+Description: Kosaraju’s algorithm is another method for finding strongly connected components by performing two passes of DFS.
+Time Complexity: O(V + E)
+Space Complexity: O(V), for the visited array and the stack.
+```
+public void kosarajuDFS(int node, List<List<Integer>> graph, boolean[] visited, Stack<Integer> stack) {
+    visited[node] = true;
+    for (int neighbor : graph.get(node)) {
+        if (!visited[neighbor]) {
+            kosarajuDFS(neighbor, graph, visited, stack);
+        }
+    }
+    stack.push(node);
+}
+
+public void reverseDFS(int node, List<List<Integer>> reverseGraph, boolean[] visited) {
+    visited[node] = true;
+    for (int neighbor : reverseGraph.get(node)) {
+        if (!visited[neighbor]) {
+            reverseDFS(neighbor, reverseGraph, visited);
+        }
+    }
+}
+```
+11. Union-Find (Disjoint Set Union, DSU)
+Description: Union-Find is a data structure that supports union and find operations efficiently. It’s used for detecting cycles in a graph, particularly in Kruskal’s algorithm.
+Time Complexity: O(α(n)), where α is the inverse Ackermann function.
+Space Complexity: O(V), for the parent and rank arrays.
+```
+class UnionFind {
+    int[] parent, rank;
+
+    public UnionFind(int size) {
+        parent = new int[size];
+        rank = new int[size];
+        for (int i = 0; i < size; i++) parent[i] = i;
+    }
+
+    public int find(int node) {
+        if (parent[node] != node) parent[node] = find(parent[node]);
+        return parent[node];
+    }
+
+    public void union(int u, int v) {
+        int rootU = find(u);
+        int rootV = find(v);
+
+        if (rootU != rootV) {
+            if (rank[rootU] > rank[rootV]) {
+                parent[rootV] = rootU;
+            } else if (rank[rootU] < rank[rootV]) {
+                parent[rootU] = rootV;
+            } else {
+                parent[rootV] = rootU;
+                rank[rootU]++;
+            }
+        }
+    }
+}
+```
+
+
+Summary of Time and Space Complexities:
