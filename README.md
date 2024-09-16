@@ -2,6 +2,8 @@
 # TOPIC COVERED
 1. Sorting
 2. Searching
+3. Tree
+4. 
 
 **SORTING ALGORITHMS**
  
